@@ -18,8 +18,11 @@ public class Player : Sprite
    
     DateTime _immunityExpiration = DateTime.Now;
 
+    SpriteFont _font;
+
     public bool IsDead { get => Hearts <= 0; }
 
+    private int _score = 0;
 
     Texture2D _heart;
 
@@ -28,10 +31,10 @@ public class Player : Sprite
     private const int XSPEED = 4;
     private const int YSPEED = 4;
     private const int MIRACLE = 10;
-    private const double HEART_SIZE = 6;
+    private const double HEART_SIZE = 8;
     private const int IMMUNITY_TIME = 1000;
     
-    public Player(Texture2D texture, Texture2D heartTexture, Vector2 position, List<Sprite> collidables, Viewport viewport) : base(texture, position, 9f)
+    public Player(Texture2D texture, Texture2D heartTexture, SpriteFont font, Vector2 position, List<Sprite> collidables, Viewport viewport) : base(texture, position, 8f)
 	{
         _collidables = collidables;
         int miracle = MIRACLE;
@@ -41,6 +44,7 @@ public class Player : Sprite
         _heart = heartTexture;
 
         _miracleRect = new Rectangle(Rect.X + miracle, Rect.Y + miracle, Rect.Width - miracle, Rect.Height - miracle);
+        _font = font;
 	}
 
     public override void Update(GameTime deltaTime)
@@ -49,9 +53,8 @@ public class Player : Sprite
         int miracle = MIRACLE;  
         _miracleRect = new Rectangle(Rect.X + miracle, Rect.Y + miracle, Rect.Width - miracle, Rect.Height - miracle);
 
+        _score = (int)Math.Floor((deltaTime.TotalGameTime.Seconds * Math.Pow(1.03, (double)deltaTime.TotalGameTime.Seconds)));
 
-        int differenceX = 0;
-        int differenceY = 0;
 
         _lastAction.X = 0;
         _lastAction.Y = 0;
@@ -103,10 +106,22 @@ public class Player : Sprite
         for (int i = 0; i<Hearts; i++)
         {
             Rectangle sizeHeart = _heart.Bounds;
-            Rectangle heartBox = new Rectangle(sizeHeart.Width * i * (int)(HEART_SIZE* 1.3), 0, (int)(sizeHeart.Width*HEART_SIZE), (int)(sizeHeart.Height*HEART_SIZE));
+            Rectangle heartBox = new Rectangle(sizeHeart.Width * i * (int)(HEART_SIZE* 1.2) + 10, 10, (int)(sizeHeart.Width*HEART_SIZE), (int)(sizeHeart.Height*HEART_SIZE));
 
             spriteBatch.Draw(_heart, heartBox, Color.White);
         }
+        float scale = 1f; // 3x the original size
+        spriteBatch.DrawString(
+            _font,
+            _score.ToString(),
+            new Vector2(160, 6),
+            Color.White,
+            0f,             // Rotation
+            Vector2.Zero,   // Origin
+            scale,          // Scale factor
+            SpriteEffects.None,
+            0f
+        );
     }
 
 

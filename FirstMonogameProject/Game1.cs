@@ -16,6 +16,9 @@ namespace FirstMonogameProject
         Player _player;
 
 
+        private SpriteFont _font;
+        private Background _background;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -37,6 +40,11 @@ namespace FirstMonogameProject
 
             Texture2D player_texture = Content.Load<Texture2D>("tinycoffee");
             Texture2D heart_texture = Content.Load<Texture2D>("heart");
+            Texture2D background_texture = Content.Load<Texture2D>("background");
+
+            _background = new Background(background_texture);
+            _background.Initialize();
+
             Texture2D[] enemy_textures = new Texture2D[3]
             {
                 Content.Load<Texture2D>("saws/saw0"),
@@ -44,10 +52,10 @@ namespace FirstMonogameProject
                 Content.Load<Texture2D>("saws/saw2")
             };
 
-            int enemyCount = 4;
+            int enemyCount = 5;
 
-            _player = new Player(player_texture, heart_texture, new Vector2(600, 400), _enemies, viewport);
-            _sprites.Add(_player);
+            _font = Content.Load<SpriteFont>("Fonts/astro");
+            _player = new Player(player_texture, heart_texture,_font, new Vector2(600, 400), _enemies, viewport);
 
             for (int i = 0; i < enemyCount; i++)
             {
@@ -56,7 +64,7 @@ namespace FirstMonogameProject
                 _sprites.Add(enemy);
                 _enemies.Add(enemy);
             }
-
+            _sprites.Add(_player);
 
 
             
@@ -88,8 +96,12 @@ namespace FirstMonogameProject
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
+
+
             // TODO: Add your drawing code here
             _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+
+            _background.Draw(_spriteBatch);
 
             foreach (var sprite in _sprites)
             {

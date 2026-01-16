@@ -19,7 +19,7 @@ public class Sprite
 	public float scale { get; set; } = 1;
 
 	
-	public Sprite(Texture2D texture, Vector2 position, float scale=10)
+	public Sprite(Texture2D texture, Vector2 position, float scale=8)
 	{
 		this.Texture = texture;
 		this.Position = position;
