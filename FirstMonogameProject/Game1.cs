@@ -12,6 +12,8 @@ namespace FirstMonogameProject
 
 
         List<Sprite> _sprites = new();
+        List<Sprite> _enemies = new();
+        Player _player;
 
 
         public Game1()
@@ -34,6 +36,7 @@ namespace FirstMonogameProject
             Viewport viewport = _graphics.GraphicsDevice.Viewport;
 
             Texture2D player_texture = Content.Load<Texture2D>("tinycoffee");
+            Texture2D heart_texture = Content.Load<Texture2D>("heart");
             Texture2D[] enemy_textures = new Texture2D[3]
             {
                 Content.Load<Texture2D>("saws/saw0"),
@@ -41,12 +44,19 @@ namespace FirstMonogameProject
                 Content.Load<Texture2D>("saws/saw2")
             };
 
-            int enemies = 4;
+            int enemyCount = 4;
 
-            for (int i = 0; i < enemies; i++)
+            _player = new Player(player_texture, heart_texture, new Vector2(600, 400), _enemies, viewport);
+            _sprites.Add(_player);
+
+            for (int i = 0; i < enemyCount; i++)
             {
-                _sprites.Add(new Enemy(enemy_textures, new Vector2(100,100), viewport));
+                Enemy enemy = new Enemy(enemy_textures, new Vector2(i*100,100), viewport, _enemies);
+
+                _sprites.Add(enemy);
+                _enemies.Add(enemy);
             }
+
 
 
             
@@ -66,6 +76,11 @@ namespace FirstMonogameProject
             }
 
 
+            if (_player.IsDead)
+            {
+                base.Exit();
+            }
+
             base.Update(gameTime);
         }
 
@@ -82,7 +97,6 @@ namespace FirstMonogameProject
             }
 
             _spriteBatch.End();
-
 
             base.Draw(gameTime);
         }

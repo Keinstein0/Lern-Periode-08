@@ -14,13 +14,16 @@ public class Enemy : Sprite
 
     private Rectangle _window;
 
-    public List<Sprite> Collidables { get;  set; }
-   
-    public Enemy(Texture2D[] texture, Vector2 position, Viewport window) : base(texture[0], position)
+    private List<Sprite> _collidables;
+
+    private Random _globalrandom = new Random();
+
+    public Enemy(Texture2D[] texture, Vector2 position, Viewport window, List<Sprite> collidables) : base(texture[0], position)
 	{
         _textures = texture;
         RandomizeVelocity();
         _window = window.Bounds;
+        _collidables = collidables;
 	}
 
 
@@ -49,32 +52,43 @@ public class Enemy : Sprite
 
     private void CheckBoxes(bool isX)
     {
-        Random r = new Random();
-
         if (!_window.Contains(base.Rect))
         {
-            if (isX)
+            Bounce(isX);
+        }
+
+
+        foreach (Sprite collidable in _collidables)
+        {
+            if (collidable.Rect.Intersects(Rect) && collidable != this)
             {
-                MoveX(-_velocity.X);
-                _velocity.X *= -1;
-                _velocity.Y = Math.Clamp(_velocity.Y + r.Next(-1, 1), -5, 5);
+                Bounce(isX);
             }
-            else
-            {
-                MoveY(-_velocity.Y);
-                _velocity.Y *= -1;
-                _velocity.X = Math.Clamp(_velocity.X + r.Next(-1, 1), -5, 5);
-            }
+        }
+    }
+
+
+    private void Bounce(bool isX)
+    {
+        if (isX)
+        {
+            MoveX(-_velocity.X);
+            _velocity.X *= -1;
+            _velocity.Y = Math.Clamp(_velocity.Y + _globalrandom.Next(-1, 1), -5, 5);
+        }
+        else
+        {
+            MoveY(-_velocity.Y);
+            _velocity.Y *= -1;
+            _velocity.X = Math.Clamp(_velocity.X + _globalrandom.Next(-1, 1), -5, 5);
         }
     }
 
 
     private void RandomizeVelocity()
     {
-        Random r = new Random();
-        
-        _velocity.X = r.Next(-5, 5);
-        _velocity.Y = r.Next(-5, 5);
+        _velocity.X = _globalrandom.Next(-5, 5);
+        _velocity.Y = _globalrandom.Next(-5, 5);
     }
 
 }
