@@ -5,3 +5,8 @@ Um ein Relevantes Thema zu finden überlegte ich zuerst was genau ich neues lern
 Als Tutorial werde ich (https://www.youtube.com/watch?v=it_vSf80sSk&list=PLvN4CrYN-8i4MhiXQMajViJoC5udFfNfA) verwenden. Wärend es mich nicht zu einem fertigen Game bringt werde ich das Turorial durcharbeiten und alle elemente in ein Game (simpler plattformer) integrieren. 
 
 
+## 16.1.2026
+- [ ] Kollisionen zwischen gegnern
+- [ ] Implementation spieler in Beispielgame
+- [ ] Spiler Kollisionen
+- [ ] Animationen tutorial
