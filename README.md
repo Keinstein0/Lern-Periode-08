@@ -6,7 +6,17 @@ Als Tutorial werde ich (https://www.youtube.com/watch?v=it_vSf80sSk&list=PLvN4Cr
 
 
 ## 16.1.2026
-- [ ] Kollisionen zwischen gegnern
-- [ ] Implementation spieler in Beispielgame
-- [ ] Spiler Kollisionen
-- [ ] Animationen tutorial
+- [X] Kollisionen zwischen gegnern
+- [X] Implementation spieler in Beispielgame
+- [X] Spiler Kollisionen
+- [X] Animationen tutorial
+
+Ich konnte heute das Tutorial "fertig" machen. Der rest der Tutorials befasst sich nur noch mit logischen konzepten und nicht Tatsächlichen features von Monogame. 
+
+
+## 23.1.2026
+- [ ] Hintergrund fertig
+- [ ] Titelscreen
+- [ ] Animationen
+- [ ] Power-ups
+- [ ] Overall Polishing
