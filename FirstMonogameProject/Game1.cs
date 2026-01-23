@@ -32,6 +32,8 @@ namespace FirstMonogameProject
         double _yvel = 0;
         double _ypos = 0;
 
+        Texture2D _water;
+
 
         // Assets
         Texture2D[] _enemy_textures;
@@ -66,7 +68,9 @@ namespace FirstMonogameProject
             Texture2D explode = Content.Load<Texture2D>("tinycoffee_explode");
             Texture2D shattered = Content.Load<Texture2D>("tinycoffee_split");
 
-            _background = new Background(background_texture);
+            _water = Content.Load<Texture2D>("water");
+
+            _background = new Background(background_texture, _water);
             _background.Initialize();
 
             _enemy_textures = new Texture2D[3]
@@ -194,7 +198,7 @@ namespace FirstMonogameProject
             // TODO: Add your drawing code here
             _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
-            _background.Draw(_spriteBatch);
+            _background.Draw(_spriteBatch, gameTime);
 
 
             if (!_isOnTitleScreen)

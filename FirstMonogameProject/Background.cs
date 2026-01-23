@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,11 +17,18 @@ namespace FirstMonogameProject
         Texture2D _texture;
 
         int[,] _primaryMap;
+        Texture2D _water;
+        int _waterOffset = -500;
+        int _waterOffsetY = 0;
+
+
+        Random r = new Random();
         
-        public Background(Texture2D template)
+        public Background(Texture2D template, Texture2D water)
         {
             _primaryMap = MapGenerator.GenerateSpotMap(WIDTH, HEIGHT, 2.5f, 0.65f, new Random().Next());
             _texture = template;
+            _water = water;
         }
 
         int _yoffset = 0;
@@ -59,7 +67,7 @@ namespace FirstMonogameProject
             }
         }
 
-        public void Draw(SpriteBatch sb)
+        public void Draw(SpriteBatch sb, GameTime gameTime)
         {
             for (int x = 0; x < WIDTH; x++)
             {
@@ -68,6 +76,25 @@ namespace FirstMonogameProject
                     _tileMap[x, y].Draw(sb,x*16,y*16 + _yoffset);
                 }
             }
+            Rectangle destination = new(_waterOffset, 370 + (int)(_yoffset*4.5f) + _waterOffsetY, _water.Width * 7, _water.Height * 7);
+            sb.Draw(_water, destination, Color.White);
+
+            // 1. Define these variables at the top of your class
+            float amplitude = 50; // How many pixels up/down it moves
+            float speed = 2.4f;      // How fast it hovers
+
+            float amplitudeY = 15; // How many pixels up/down it moves
+            float speedY = 2.4f;      // How fast it hovers
+
+            // 2. In your Update method
+            double time = gameTime.TotalGameTime.TotalSeconds;
+
+            // Math.Sin returns a value between -1.0 and 1.0
+            // We multiply by amplitude to get the pixel offset
+            _waterOffset = (int)(Math.Sin(time * speed) * amplitude) - 600;
+            _waterOffsetY = (int)(Math.Cos(time * speedY) * amplitudeY);
+
+
         }
 
 
