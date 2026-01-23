@@ -18,10 +18,13 @@ public class Enemy : Sprite
 
     private Random _globalrandom = new Random();
 
+    private int _collisionImmunity = 0;
+
+    private int _yOffset = 0;
+
     public Enemy(Texture2D[] texture, Vector2 position, Viewport window, List<Sprite> collidables) : base(texture[0], position)
 	{
         _textures = texture;
-        RandomizeVelocity();
         _window = window.Bounds;
         _collidables = collidables;
 	}
@@ -45,14 +48,25 @@ public class Enemy : Sprite
         MoveY(_velocity.Y);
         CheckBoxes(false);
         
-        
+        if (_collisionImmunity > 0)
+        {
+            _collisionImmunity--;
+        }
 
+    }
+
+    public override void Draw(SpriteBatch spriteBatch)
+    {
+        Rectangle actual = new Rectangle(Rect.Location, Rect.Size);
+        actual.Y += _yOffset;
+        
+        spriteBatch.Draw(Texture, actual, Color.White);
     }
 
 
     private void CheckBoxes(bool isX)
     {
-        if (!_window.Contains(base.Rect))
+        if (!_window.Contains(base.Rect) && _collisionImmunity == 0)
         {
             Bounce(isX);
         }
@@ -60,7 +74,7 @@ public class Enemy : Sprite
 
         foreach (Sprite collidable in _collidables)
         {
-            if (collidable.Rect.Intersects(Rect) && collidable != this)
+            if (collidable.Rect.Intersects(Rect) && collidable != this && _collisionImmunity == 0)
             {
                 Bounce(isX);
             }
@@ -85,10 +99,15 @@ public class Enemy : Sprite
     }
 
 
-    private void RandomizeVelocity()
+    public void SetVelocity(Vector2 vel, int collisionImmunity = 0)
     {
-        _velocity.X = _globalrandom.Next(-5, 5);
-        _velocity.Y = _globalrandom.Next(-5, 5);
+        _velocity = vel;
+        _collisionImmunity = collisionImmunity;
+    }
+
+    public void ApplyOffset(int offset)
+    {
+        _yOffset = offset;
     }
 
 }

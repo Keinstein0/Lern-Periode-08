@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>C:/Users/alex/source/repos/Lern-Periode-08/FirstMonogameProject/Content/background.png</SourceFile>
-  <SourceTime>2026-01-16T13:31:44.0963676+01:00</SourceTime>
-  <DestFile>C:/Users/alex/source/repos/Lern-Periode-08/FirstMonogameProject/Content/bin/DesktopGL/Content/background.xnb</DestFile>
-  <DestTime>2026-01-16T13:53:49.1514848+01:00</DestTime>
+  <SourceFile>C:/Users/alex/source/repos/Lern-Periode-08/FirstMonogameProject/Content/Buttons/buttonnormal.png</SourceFile>
+  <SourceTime>2026-01-23T08:28:30.195462+01:00</SourceTime>
+  <DestFile>C:/Users/alex/source/repos/Lern-Periode-08/FirstMonogameProject/Content/bin/DesktopGL/Buttons/buttonnormal.xnb</DestFile>
+  <DestTime>2026-01-23T11:03:01.4797224+01:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2025-06-02T12:31:02+02:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

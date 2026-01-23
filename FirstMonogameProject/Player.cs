@@ -16,15 +16,19 @@ public class Player : Sprite
 
     Vector2 _lastAction;
    
-    DateTime _immunityExpiration = DateTime.Now;
+    DateTime _immunityExpiration = DateTime.Now.AddMilliseconds(2000);
+    DateTime _scoreUpdatedLast = DateTime.Now;
 
     SpriteFont _font;
 
     public bool IsDead { get => Hearts <= 0; }
 
     private int _score = 0;
+    public int Score { get => _score; }
 
     Texture2D _heart;
+    Texture2D _explode;
+    Texture2D _shattered;
 
     public int Hearts { get; private set; } = 3;
 
@@ -33,8 +37,14 @@ public class Player : Sprite
     private const int MIRACLE = 10;
     private const double HEART_SIZE = 8;
     private const int IMMUNITY_TIME = 1000;
+
+    bool isShattered = false;
+    int shatterTimer = 0;
+
+    Sprite _leftShatter;
+    Sprite _rightShatter;
     
-    public Player(Texture2D texture, Texture2D heartTexture, SpriteFont font, Vector2 position, List<Sprite> collidables, Viewport viewport) : base(texture, position, 8f)
+    public Player(Texture2D texture, Texture2D heartTexture, SpriteFont font, Vector2 position, List<Sprite> collidables, Viewport viewport, Texture2D explode, Texture2D shattered) : base(texture, position, 8f)
 	{
         _collidables = collidables;
         int miracle = MIRACLE;
@@ -45,6 +55,10 @@ public class Player : Sprite
 
         _miracleRect = new Rectangle(Rect.X + miracle, Rect.Y + miracle, Rect.Width - miracle, Rect.Height - miracle);
         _font = font;
+
+        _explode = explode;
+        _shattered = shattered;
+
 	}
 
     public override void Update(GameTime deltaTime)
@@ -53,28 +67,32 @@ public class Player : Sprite
         int miracle = MIRACLE;  
         _miracleRect = new Rectangle(Rect.X + miracle, Rect.Y + miracle, Rect.Width - miracle, Rect.Height - miracle);
 
-        _score = (int)Math.Floor((deltaTime.TotalGameTime.Seconds * Math.Pow(1.03, (double)deltaTime.TotalGameTime.Seconds)));
-
+        //_score = (int)Math.Floor((deltaTime.TotalGameTime.Seconds * Math.Pow(1.03, (double)deltaTime.TotalGameTime.Seconds)));
+        if (_scoreUpdatedLast.AddSeconds(1) < DateTime.Now)
+        {
+            _score +=(int)Math.Pow(1.05, _score);
+            _scoreUpdatedLast = DateTime.Now;
+        }
 
         _lastAction.X = 0;
         _lastAction.Y = 0;
 
-        if (Keyboard.GetState().IsKeyDown(Keys.Down))
+        if (Keyboard.GetState().IsKeyDown(Keys.Down) && !isShattered)
         {
             _lastAction.Y += YSPEED;
         }
-        if (Keyboard.GetState().IsKeyDown(Keys.Up))
+        if (Keyboard.GetState().IsKeyDown(Keys.Up) && !isShattered)
         {
             _lastAction.Y -= YSPEED;
         }
         MoveY(_lastAction.Y);
         CheckCollisions(false);
 
-        if (Keyboard.GetState().IsKeyDown(Keys.Right))
+        if (Keyboard.GetState().IsKeyDown(Keys.Right) && !isShattered)
         {
             _lastAction.X += XSPEED;
         }
-        if (Keyboard.GetState().IsKeyDown(Keys.Left))
+        if (Keyboard.GetState().IsKeyDown(Keys.Left) && !isShattered)
         {
             _lastAction.X -= XSPEED;
         }
@@ -82,34 +100,68 @@ public class Player : Sprite
         
         CheckCollisions(true);
 
+        if (shatterTimer <= 50 && isShattered && shatterTimer >= 10)
+        {
+            _leftShatter.Rotation -= 0.02f;
+            _rightShatter.Rotation += 0.02f;
+
+            _leftShatter.MoveX(-1);
+            _rightShatter.MoveX(1);
+        }
+
         //_texture = new Texture2D(graphicsDevice, 1, 1);
         //_texture.SetData(new Color[] { Color.White });
     }
 
     public override void Draw(SpriteBatch spriteBatch)
     {
-        if (_isDamageApplied)
+        if (!isShattered)
         {
-            spriteBatch.Draw(Texture, Rect, Color.Red);
-
-            if (DateTime.Now > _immunityExpiration)
+            if (_isDamageApplied)
             {
-                Hearts--;
-                _immunityExpiration = DateTime.Now.AddMilliseconds(IMMUNITY_TIME);
+                spriteBatch.Draw(Texture, Rect, Color.Red);
+
+                if (DateTime.Now > _immunityExpiration)
+                {
+                    Hearts--;
+                    _immunityExpiration = DateTime.Now.AddMilliseconds(IMMUNITY_TIME);
+                }
+            }
+            else
+            {
+                spriteBatch.Draw(Texture, Rect, Color.White);
+            }
+
+            for (int i = 0; i < Hearts; i++)
+            {
+                Rectangle sizeHeart = _heart.Bounds;
+                Rectangle heartBox = new Rectangle(sizeHeart.Width * i * (int)(HEART_SIZE * 1.2) + 10, 10, (int)(sizeHeart.Width * HEART_SIZE), (int)(sizeHeart.Height * HEART_SIZE));
+
+                spriteBatch.Draw(_heart, heartBox, Color.White);
             }
         }
         else
         {
-            spriteBatch.Draw(Texture, Rect, Color.White);
+            shatterTimer--;
+            if (shatterTimer > 50)
+            {
+                Rectangle actual = new Rectangle(Rect.Location, Rect.Size);
+                actual.X -= (int)((int)16f*base.scale);
+                actual.Y -= (int)((int)16f * base.scale);
+                actual.Width += (int)((int)32 * base.scale);
+                actual.Height += (int)((int)32 * base.scale);
+
+                
+
+                spriteBatch.Draw(_explode, actual, Color.White);
+            }
+            if (shatterTimer <= 50)
+            {
+                _leftShatter.Draw(spriteBatch);
+                _rightShatter.Draw(spriteBatch);
+            }
         }
 
-        for (int i = 0; i<Hearts; i++)
-        {
-            Rectangle sizeHeart = _heart.Bounds;
-            Rectangle heartBox = new Rectangle(sizeHeart.Width * i * (int)(HEART_SIZE* 1.2) + 10, 10, (int)(sizeHeart.Width*HEART_SIZE), (int)(sizeHeart.Height*HEART_SIZE));
-
-            spriteBatch.Draw(_heart, heartBox, Color.White);
-        }
         float scale = 1f; // 3x the original size
         spriteBatch.DrawString(
             _font,
@@ -122,6 +174,15 @@ public class Player : Sprite
             SpriteEffects.None,
             0f
         );
+    }
+
+    public void Reset()
+    {
+        Hearts = 3;
+        _score = 0;
+        _immunityExpiration = DateTime.Now.AddMilliseconds(2000);
+        isShattered = false;
+        shatterTimer = 0;
     }
 
 
@@ -151,5 +212,32 @@ public class Player : Sprite
         {
             MoveY(-_lastAction.Y);
         }
+    }
+
+    public void UpdateCollisionRef(List<Sprite> collidables)
+    {
+        _collidables = collidables;
+    }
+
+
+    public void Shatter()
+    {
+        isShattered = true;
+        shatterTimer = 100;
+
+
+        Vector2 location = new Vector2(base.Rect.Location.X, base.Rect.Location.Y);
+
+        _leftShatter = new(_shattered, location, 8);
+        _rightShatter = new(_shattered, location, 8);
+
+        Rectangle srcLeft = new(0, 0, 6, 7);
+        Rectangle srcRight = new(6, 0, 6, 7);
+
+        _leftShatter.SourceRect = srcLeft;
+        _rightShatter.SourceRect = srcRight;
+
+        _leftShatter.Origin = new Vector2(3, 3.5f);
+        _rightShatter.Origin = new Vector2(3, 3.5f);
     }
 }

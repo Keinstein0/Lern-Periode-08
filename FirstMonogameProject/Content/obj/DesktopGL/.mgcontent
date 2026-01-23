@@ -5,6 +5,8 @@
   <Config />
   <SourceFiles>
     <File>C:/Users/alex/source/repos/Lern-Periode-08/FirstMonogameProject/Content/background.png</File>
+    <File>C:/Users/alex/source/repos/Lern-Periode-08/FirstMonogameProject/Content/Buttons/buttonactive.png</File>
+    <File>C:/Users/alex/source/repos/Lern-Periode-08/FirstMonogameProject/Content/Buttons/buttonnormal.png</File>
     <File>C:/Users/alex/source/repos/Lern-Periode-08/FirstMonogameProject/Content/coffee.png</File>
     <File>C:/Users/alex/source/repos/Lern-Periode-08/FirstMonogameProject/Content/Fonts/Arial.spritefont</File>
     <File>C:/Users/alex/source/repos/Lern-Periode-08/FirstMonogameProject/Content/Fonts/astro.spritefont</File>
@@ -12,9 +14,15 @@
     <File>C:/Users/alex/source/repos/Lern-Periode-08/FirstMonogameProject/Content/saws/saw0.png</File>
     <File>C:/Users/alex/source/repos/Lern-Periode-08/FirstMonogameProject/Content/saws/saw1.png</File>
     <File>C:/Users/alex/source/repos/Lern-Periode-08/FirstMonogameProject/Content/saws/saw2.png</File>
+    <File>C:/Users/alex/source/repos/Lern-Periode-08/FirstMonogameProject/Content/tinycoffee_explode.png</File>
+    <File>C:/Users/alex/source/repos/Lern-Periode-08/FirstMonogameProject/Content/tinycoffee_split.png</File>
     <File>C:/Users/alex/source/repos/Lern-Periode-08/FirstMonogameProject/Content/tinycoffee.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
