@@ -15,8 +15,12 @@ Ich konnte heute das Tutorial "fertig" machen. Der rest der Tutorials befasst si
 
 
 ## 23.1.2026
-- [ ] Hintergrund fertig
-- [ ] Titelscreen
-- [ ] Animationen
+- [X] Hintergrund fertig
+- [X] Titelscreen
+- [X] Animationen
 - [ ] Power-ups
-- [ ] Overall Polishing
+- [X] Overall Polishing
+Ich konnte heute generell die grafik des spiels um einiges verbessern
+
+## 23.2.2026
+- [ ] Animationen
