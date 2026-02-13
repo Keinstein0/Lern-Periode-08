@@ -23,8 +23,8 @@ public class Player : Sprite
 
     public bool IsDead { get => Hearts <= 0; }
 
-    private int _score = 0;
-    public int Score { get => _score; }
+    private float _score = 1f;
+    public int Score { get => (int)_score; }
 
     Texture2D _heart;
     Texture2D _explode;
@@ -70,7 +70,7 @@ public class Player : Sprite
         //_score = (int)Math.Floor((deltaTime.TotalGameTime.Seconds * Math.Pow(1.03, (double)deltaTime.TotalGameTime.Seconds)));
         if (_scoreUpdatedLast.AddSeconds(1) < DateTime.Now)
         {
-            _score +=(int)Math.Pow(1.05, _score);
+            _score = (float)(_score * 1.1);
             _scoreUpdatedLast = DateTime.Now;
         }
 
@@ -165,7 +165,7 @@ public class Player : Sprite
         float scale = 1f; // 3x the original size
         spriteBatch.DrawString(
             _font,
-            _score.ToString(),
+            Score.ToString(),
             new Vector2(160, 6),
             Color.White,
             0f,             // Rotation
@@ -179,7 +179,7 @@ public class Player : Sprite
     public void Reset()
     {
         Hearts = 3;
-        _score = 0;
+        _score = 1f;
         _immunityExpiration = DateTime.Now.AddMilliseconds(2000);
         isShattered = false;
         shatterTimer = 0;
