@@ -208,4 +208,13 @@ And by adding the rectangle as a parameter in game.cs we can now detect collisio
 Well now you've written a simple pong. You've also learned the basics of MonoGame and there really isn't a lot more to it. There are other concepts which we skipped (Music, SourceRectangles) but with these basics you should be able to make a pretty decent game. The part where there's most to learn would be with the general structure of the game. Theres lots of ways to implement a good structure (for example making everything a sprite) to make the game more modular, but that's a rather general topic which isn't only relevant for MonoGame.
 
 
+### Possible Problems
+#### It says that i can't convert a Vector2 to a Vector2... what?
+This is because both System.Drawing and MonoGame add a Vector2 which is a bit ambiguous. When typing you should always select the Windows.XNA.Framework one
 
+#### I can't import the texture i want to
+This is likely because you either:
+ - simply pasted in the file without using the MGCB Editor
+ - forgot to build after adding the file
+ - have a typo in your filename
+ - added a file extension (Monogame only needs filename, so write image instead of image.jpg)
