@@ -177,9 +177,35 @@ protected override void LoadContent()
 ```
 The viewport is just a box of the coordinates that tells the ball where the window stops. Now we only need to add the Update and Draw functions in their respective counterpart in game.cs and we should see the ball bouncing around. 
 
+#### Collisions
+As you may now see the ball just completely ignores the paddle. In order to counter this we'll have to introduce collisions into our game. Collisions are also rather simple because as you may remember both of our objects have a Rectangle that tells them where they are. And luckily for us the MonoGame Rectangle allows us to check if two overlap. For this we'll modify the ball's update and add a parameter for the rectangle that tells us where the bat is. We then make a check if the two overlap with the statement ```if (rect1.Intersects(rect2))```. This means that our balls new update now looks like this:
+```
+public void Update(GameTime gameTime, Rectangle paddle)
+{
+    // 1. Move the ball based on velocity and elapsed time
+    float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
+    int nextX = position.X + (int)(velocity.X * deltaTime);
+    int nextY = position.Y + (int)(velocity.Y * deltaTime);
 
+    position.X = nextX;
+    position.Y = nextY;
 
+    // if collision bounce
+    if (paddle.Intersects(position))
+    {
+        velocity.X *= -1;
+    }
+
+    //Wall collision checks
+    ...
+}
+```
+
+And by adding the rectangle as a parameter in game.cs we can now detect collisions. 
+
+#### What now?
+Well now you've written a simple pong. You've also learned the basics of MonoGame and there really isn't a lot more to it. There are other concepts which we skipped (Music, SourceRectangles) but with these basics you should be able to make a pretty decent game. The part where there's most to learn would be with the general structure of the game. Theres lots of ways to implement a good structure (for example making everything a sprite) to make the game more modular, but that's a rather general topic which isn't only relevant for MonoGame.
 
 
 
