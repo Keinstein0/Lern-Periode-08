@@ -64,12 +64,118 @@ protected override void Draw(GameTime gameTime)
 ```
 If you now run the file you should now see your paddle displayed.
 
+#### Input
+Input in monogame is about as simple, if not even simpler then output. Lets say we want to make the paddle move up and down depending on what the user presses. For this we'll first have to make the yposition of the paddle a field so that we can control it from our update function. Then we can just simply in our update function check if a key is down by using ```Keyboard.GetState().IsKeyDown(Keys.Up)``` which gives us a bool which we can check using an if statement. This allows us to use something a long the following in the Update function.
 
+```
+protected override void Update(GameTime gameTime)
+{
+    if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+        Exit();
 
+    // TODO: Add your update logic here
 
+    if (Keyboard.GetState().IsKeyDown(Keys.Down))
+    {
+        ypos += 5;
+    }
+    if (Keyboard.GetState().IsKeyDown(Keys.Up))
+    {
+        ypos -= 5;
+    }
+    base.Update(gameTime);
+}
+```
 
+And like this we have our movement implemented. Now the paddle should move up and down if you press the respective keys!
 
+#### Structuring
+At the moment our code is a bit messy. Imagine you'd have to implement an entire massive game in this one file. That's why we can use OOP to help us out and group things a bit better. For this we'll implement the ball in such a manner. 
+To start off with we'll create a Ball class. This class will have 3 major functions:
 
+Constructor: Inject texture
+Update() : Update logic of the ball such as bouncing
+Draw() : Draw the ball on the window
+
+And this means the class looks like that:
+```
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+
+namespace testmonogame
+{
+    public class Ball
+    {
+        Texture2D _texture;
+        Rectangle position;
+        Viewport _viewport;
+        Vector2 velocity;
+
+        public Ball(Texture2D texture, Viewport vp)
+        {
+            double scale = 0.5;
+            _viewport = vp;
+            _texture = texture;
+
+            // Initialize position
+            position = new Rectangle(100, 100, (int)(texture.Width * scale), (int)(texture.Height * scale));
+
+            velocity = new Vector2(200f, 200f);
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            // 1. Move the ball based on velocity and elapsed time
+            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            int nextX = position.X + (int)(velocity.X * deltaTime);
+            int nextY = position.Y + (int)(velocity.Y * deltaTime);
+
+            position.X = nextX;
+            position.Y = nextY;
+
+            // 2. Check Horizontal Walls (Left and Right)
+            if (position.Left < 0 || position.Right > _viewport.Width)
+            {
+                velocity.X *= -1; // Reverse horizontal direction
+
+                // Keep the ball inside the screen so it doesn't get stuck
+                position.X = MathHelper.Clamp(position.X, 0, _viewport.Width - position.Width);
+            }
+
+            // 3. Check Vertical Walls (Top and Bottom)
+            if (position.Top < 0 || position.Bottom > _viewport.Height)
+            {
+                velocity.Y *= -1; // Reverse vertical direction
+
+                // Keep the ball inside the screen
+                position.Y = MathHelper.Clamp(position.Y, 0, _viewport.Height - position.Height);
+            }
+        }
+
+        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(_texture, position, Color.White);
+        }
+    }
+}
+```
+
+Now in order to call this class respectively in game.cs we'll add a field for our Ball object and we'll change the LoadContent to this:
+```
+protected override void LoadContent()
+{
+    _spriteBatch = new SpriteBatch(GraphicsDevice);
+    // TODO: use this.Content to load your game content here
+
+     Viewport vp = _graphics.GraphicsDevice.Viewport;
+
+    paddle = Content.Load<Texture2D>("paddle");
+    Texture2D balltexture = Content.Load<Texture2D>("ball");
+    ball = new Ball(balltexture, vp);     
+}
+```
+The viewport is just a box of the coordinates that tells the ball where the window stops. Now we only need to add the Update and Draw functions in their respective counterpart in game.cs and we should see the ball bouncing around. 
 
 
 
